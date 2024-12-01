@@ -2,12 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "server.tsx",
+  "type": "module",
+  "main": "index.ts",
   "scripts": {
     "start": "npx tsx index.ts",
-    "dev": "tsx watch index.ts",
-    "tsc": "tsc",
-    "typings": "typings"
+    "dev": "tsx watch index.ts"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +29,5 @@
     "nodemon": "^3.1.7",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
-  },
-  "type": "module"
+  }
 }
