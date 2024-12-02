@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 
 
 import userRoutes from "./routes/userRoutes";
+import messageRoutes from "./routes/messedgeRoutes";
 import connectToMongoDB from './db/connectMongoDB';
 
 
@@ -17,6 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use("/user", userRoutes);
+app.use("/messages", messageRoutes);
 
 app.use(express.json());
 
