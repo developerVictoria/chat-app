@@ -5,14 +5,14 @@ const userSchema = new mongoose.Schema({
         type:String, 
         required: true,
     }, 
+    username:{
+        type:String,
+        required: true
+    },
     password:{
         type:String,
         required:true,
         minlength:8,
-    },
-    gender:{
-        type:String, 
-        enum:["male","female","other"]
     },
     profilePic:{
         type:String,
