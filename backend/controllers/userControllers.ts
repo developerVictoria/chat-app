@@ -18,7 +18,6 @@ export const singupUser = async (req :Request, res: Response)=>{
         if(!password || password.length<=8) res.status(400).json({error: "Password must be provided and be more then 8 symbols!"});
         if(!firstName || !lastName)res.status(400).json({error: "First and last name must be provided!"});
         if(!username)  res.status(400).json({error: "Username must be provided!"});
-
         const user = await User.findOne({username});
         if(user) res.status(400).json({error: "Username already taken!"});
                 
@@ -32,6 +31,7 @@ export const singupUser = async (req :Request, res: Response)=>{
             profilePic: profilePic,
         })
 
+        if(!newUser) res.status(400).json({error: "Invalid user data!"});
         await newUser.save();
 
         res.status(201).json({
