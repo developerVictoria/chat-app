@@ -29,7 +29,6 @@ export const loginUser = async (req :Request, res: Response) =>{
   
 };
 
-
 export const logOutUser = (req :Request, res: Response)=>{
     try{
         res.cookie("jwt","", {maxAge:0});
