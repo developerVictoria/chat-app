@@ -1,14 +1,43 @@
 import { Request, Response }  from 'express';
-import {generatePasswordHash} from '../helpers/userHelpers';
+import bcrypt from "bcryptjs";
+import {generatePasswordHash, generateTokenAndSetCookies} from '../utils/userSingUpUtils';
 import User from "../models/userModel";
 
-export const loginUser = (req :Request, res: Response) =>{
-    //login route
+export const loginUser = async (req :Request, res: Response) =>{
+    try{
+        const {username, password} = req.body;
+        const user = await User.findOne({username});
+        const isPasswordCorrect = await bcrypt.compare(password, user?.password || "");
+
+        if(!isPasswordCorrect) res.status(400).json({error: "Invalid username or password !"});
+        if(!user){
+            res.status(400).json({error: "Invalid username or password !"});
+        }else{
+            generateTokenAndSetCookies(user._id, res);
+            res.status(201).json({
+                _id: user._id,
+                fullName: user.fullName,
+                username: user.username,
+                profilePic: user.profilePic,
+            });
+        }
+
+    }catch(error){
+        console.error(error);
+        res.status(500).json({error: `Internal server error ${error}`});
+    }
   
 };
+
+
 export const logOutUser = (req :Request, res: Response)=>{
-    //logout route with redirect to login page
-   
+    try{
+        res.cookie("jwt","", {maxAge:0});
+        res.status(200).json({message:"Logout was successfull!"});
+    }catch(error){
+        console.error(error);
+        res.status(500).json({error: `Internal server error ${error}`});
+    }
 };
 
 export const singupUser = async (req :Request, res: Response)=>{
@@ -32,7 +61,10 @@ export const singupUser = async (req :Request, res: Response)=>{
         })
 
         if(!newUser) res.status(400).json({error: "Invalid user data!"});
+
+        generateTokenAndSetCookies(newUser._id, res);
         await newUser.save();
+        
 
         res.status(201).json({
             _id: newUser._id,
