@@ -2,7 +2,7 @@
 import express, { Request, Response }  from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
-
+import cookieParser from 'cookie-parser';
 
 import userRoutes from "./routes/userRoutes";
 import messageRoutes from "./routes/messedgeRoutes";
@@ -16,6 +16,7 @@ dotenv.config();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use("/user", userRoutes);
 app.use("/messages", messageRoutes);
