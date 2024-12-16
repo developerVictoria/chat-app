@@ -2,6 +2,9 @@ import { Request, Response }  from 'express';
 import bcrypt from "bcryptjs";
 import {generatePasswordHash, generateTokenAndSetCookies} from '../utils/userSingUpUtils';
 import User from "../models/userModel";
+interface MyUserRequest extends Request {
+    user?: any;
+}
 
 export const loginUser = async (req :Request, res: Response) =>{
     try{
@@ -82,3 +85,16 @@ export const singupUser = async (req :Request, res: Response)=>{
     }
    
 };
+
+export const getUserForSidebar = async (req :MyUserRequest, res: Response)=>{
+try{
+        const loggedUser = req.user._id;
+        const fillteredUsers = await User.find({_id: {$ne: loggedUser}}).select("-password");
+
+        res.status(200).json(fillteredUsers);
+
+    }catch(error){
+        console.log(error);
+        res.status(500).json({error: `userControls: getUserForSidebar: Internal server error ${error}`});
+}
+}
