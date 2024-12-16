@@ -21,6 +21,7 @@ app.use(cookieParser());
 app.use("/user", userRoutes);
 app.use("/messages", messageRoutes);
 
+
 app.use(express.json());
 
 app.listen(PORT,()=>{

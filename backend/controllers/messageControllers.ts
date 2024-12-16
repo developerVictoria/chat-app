@@ -6,8 +6,28 @@ interface MyUserRequest extends Request {
     user?: any;
 }
 
+export const getMessages = async (req:MyUserRequest, res:Response)=>{
+    try{
+        const {id:reciverId} = req.params;
+        const senderId = req.user._id;
+
+        const conversation = await Conversation.findOne({
+            partisipants:  {$in: [senderId, new mongoose.Types.ObjectId(reciverId)] },
+        }).populate("messages");
+        if(!conversation){
+            res.status(200).json([]);
+        }else{
+            const messages = conversation.messages;
+            res.status(200).json(messages);   
+        }
+        
+    }catch(error){
+        console.error(error);
+        res.status(500).json({error: `Internal server error ${error}`});
+    }
+}
+
 export const sendMessage = async (req:MyUserRequest, res:Response)=>{
-    console.log("send msg", req.params.id);
     try{
         const {message} = req.body;
         const {id:reciverId} = req.params;
@@ -34,7 +54,7 @@ export const sendMessage = async (req:MyUserRequest, res:Response)=>{
             conversation.messages.push(newMessage._id);
             await conversation.save();
         };
-        console.log(conversation);
+        //console.log(conversation);
         res.status(200).json(newMessage)
 
     }catch(error){
